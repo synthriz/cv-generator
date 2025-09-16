@@ -1,6 +1,16 @@
 export default function PersonalInfoForm({ currentCV, updateCV, isVisible }: any) {
   if (!isVisible) return null;
 
+    {/* Formata número de telefone */}
+  const formatPhone = (value: string) => {
+    //Permite apenas números (\D=não dígito; g=global)
+    const validType = value.replace(/\D/g, '');
+    //Separa DDD
+    if (validType.length > 2)
+      return `(${validType.slice(0,2)})${validType.slice(2)}`;
+    return validType;
+  }
+
   return (
     <div className="space-y-4">
       <h3 className="font-semibold">Informações Pessoais</h3>
@@ -45,10 +55,13 @@ export default function PersonalInfoForm({ currentCV, updateCV, isVisible }: any
         type="tel"
         placeholder="Telefone (opcional)"
         value={currentCV.personalInfo.phone || ''}
-        onChange={(e) => updateCV({
+         onChange={(e) => {
+          const phoneNumber = formatPhone(e.target.value);   
+          updateCV({
           ...currentCV,
-          personalInfo: { ...currentCV.personalInfo, phone: e.target.value }
-        })}
+          personalInfo: { ...currentCV.personalInfo, phone: phoneNumber }
+          })
+        }}
         className="w-full p-2 border rounded"
       />
       <input
